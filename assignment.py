@@ -25,6 +25,7 @@ def write_file(chars,shift):
     then it encrypts the message and creates or owerwrites the chosen file in the following structure: 
     1st line contains the chars, 2nd line contains the shift, 3rd line contains the time of the write and the encrypted message."""
     message = gen.secure("Enter nonempty message: ","any",1)
+    print(f"Encrypted message: {str(new_message(message,shift,chars))}")
     file = gen.secure("Enter ffile name: ","any",1)
     if file[-4:] != ".txt":
         file += ".txt"
@@ -40,6 +41,7 @@ def write_file(chars,shift):
         with open(file_path, "w") as file:
             file.write(f"{chars}\n{shift}\n{str(datetime.now())[:19]}|{str(new_message(message,shift,chars))}")
 def get_read_file():
+    """ asks the user for the file they want to read, verifies that it exists, and returns it to get used by read_file()"""
     while True:
             file = gen.secure("Enter file name(or M to go back): ","any",1)
             if file.lower() != "m":
@@ -67,12 +69,16 @@ def read_file(file_path):
             print(f"{new_message(line.split("|")[1],shift,chars)}")
 def reply_file(file_path):
     """same as write file but already knows the file path and only writes the message on the next line, without chars or shift"""
+
+    print(f"Supported charachters: {lines[0]}")
     with open(file_path,"r") as file:
         content = file.read()
     lines = content.split("\n")
     chars = lines[0]
+    print(chars)
     shift = int(lines[1])
     message = gen.secure("Enter reply: ", "any",1)
+    print(f"Encrypted message: {str(new_message(message,shift,chars))}")
     with open(file_path,"a") as file:
         file.write(f"\n{str(datetime.now())[:19]}|{str(new_message(message,shift,chars))}")
      
@@ -91,6 +97,7 @@ def main():
         elif response == 2:
             file_path = get_read_file()
             read_file(file_path)
+            print()
             if file_path != "None":
                 decision2 = gen.secure("Do you wish to make a responce(y/n)?: ",str,1,1)
                 if decision2.lower() == "y":
